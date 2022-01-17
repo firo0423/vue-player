@@ -4,34 +4,24 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>promise</title>
   </head>
   <body>
     <div id="demo"></div>
   </body>
   <script>
-    class Car {
-      constructor(brand) {
-        this.carname = brand;
-      }
-      present() {
-        return "I have a " + this.carname;
-      }
-    }
+    let myFirstPromise = new Promise(function (resolve, reject) {
+      //当异步代码执行成功时，我们才会调用resolve(...), 当异步代码失败时就会调用reject(...)
+      //在本例中，我们使用setTimeout(...)来模拟异步代码，实际编码时可能是XHR请求或是HTML5的一些API方法.
+      setTimeout(function () {
+        resolve("成功!"); //代码正常执行！
+      }, 250);
+    });
 
-    class Model extends Car {
-      constructor(brand, mod) {
-        super(brand);
-        this.model = mod;
-      }
-      show() {
-        return this.present() + ", it is a " + this.model;
-      }
-    }
-
-    mycar = new Model("Ford", "Mustang");
-    console.log(mycar);
-    console.log(mycar.show());
-    document.getElementById("demo").innerHTML = mycar.show();
+    myFirstPromise.then(function (successMessage) {
+      //successMessage的值是上面调用resolve(...)方法传入的值.
+      //successMessage参数不一定非要是字符串类型，这里只是举个例子
+      console.log("Yay! " + successMessage);
+    });
   </script>
 </html>
