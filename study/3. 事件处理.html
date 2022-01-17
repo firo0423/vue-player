@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" />
+  </body>
+  <script>
+    window.onload = function () {
+      var inpFile = document.querySelector("input[type=file]");
+      inpFile.addEventListener("change", function () {
+        var reader = new FileReader();
+        reader.readAsText(this.files[0]);
+        var count = 0;
+        reader.onloadstart = function () {
+          console.log("onloadstart状态" + this.readyState);
+          console.log("开始加载");
+        };
+        reader.onloadend = function () {
+          console.log("onloadend状态" + this.readyState);
+          console.log("加载结束");
+        };
+        reader.onprogress = function () {
+          count++;
+          console.log("onprogress状态" + this.readyState);
+          console.log("加载中" + count);
+        };
+        reader.onload = function () {
+          console.log("onload拿到的数据为" + this.result);
+          console.log("状态" + this.readyState);
+        };
+        reader.onerror = function () {
+          console.log("出错了");
+        };
+        reader.onerror = function () {
+          console.log("处理abort事件。该事件在读取操作被中断时触发。");
+        };
+      });
+    };
+  </script>
+</html>

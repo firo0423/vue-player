@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" />
+  </body>
+  <script>
+    window.onload = function () {
+      var inpFile = document.querySelector("input[type=file]");
+      inpFile.addEventListener("change", function () {
+        var reader = new FileReader();
+        // 使用readAsDataURL（获取base64编码）
+        reader.readAsDataURL(this.files[0]);
+        reader.onload = function () {
+          console.log(this.result);
+          //data:text/plain;base64,5bey57uP5oiQ5Yqf6K+75Y+W5paH5Lu2
+        };
+      });
+    };
+  </script>
+</html>

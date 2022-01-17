@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file">
+  </body>
+  <script>
+    window.onload = function () {
+      var inpFile = document.querySelector("input[type=file]");
+      inpFile.addEventListener("change", function () {
+        var reader = new FileReader();
+        // 发送异步请求
+        // 0.使用readAsText方法（读取结果普通文本）
+        reader.readAsText(this.files[0]);
+        // 读取成功的结果：已经成功读取文件（计算机上的文件read.txt）
+        reader.onload = function () {
+          //读取完成后，数据保存在对象的result属性中
+          console.log(this.result); //打印：已经成功读取文件
+        };
+      });
+    };
+  </script>
+</html>

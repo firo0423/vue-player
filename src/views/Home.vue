@@ -8,11 +8,14 @@
 </template>
 
 <script>
+// 暴露方法 分别暴露
+import {player} from '../utiles/player'
+
 export default {
   name:"Home",
   methods: {
     play(){
-      this.$refs.audio.play()
+      player.start('../../public/music/周华健 - 有没有一首歌会让你想起我.mp3')
     }
   },
 }
