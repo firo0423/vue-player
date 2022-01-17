@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <div class="shell">
-      <audio ref="audio" src="../../public/music/周华健 - 有没有一首歌会让你想起我.mp3"></audio>
+      <input type="file" ref="file" />
       <button @click="play">播放</button>
     </div>
   </div>
@@ -9,16 +9,23 @@
 
 <script>
 // 暴露方法 分别暴露
-import {player} from '../utiles/player'
+import { player } from "../utiles/player";
 
 export default {
-  name:"Home",
+  name: "Home",
   methods: {
-    play(){
-      player.start('../../public/music/周华健 - 有没有一首歌会让你想起我.mp3')
-    }
+    play() {
+      // var reader0 = new FileReader();
+      // console.log(this.$refs.file.files[0]);
+      // reader0.readAsArrayBuffer(this.$refs.file.files[0]);
+      // reader0.onload = function () {
+      //   console.log("onload拿到的数据为" + this.result);
+      //   console.log("状态" + this.readyState);
+      // };
+      player.start(this.$refs.file.files[0]);
+    },
   },
-}
+};
 </script>
 
 <style lang="scss">
@@ -29,7 +36,7 @@ body {
   height: 100vh;
   background-color: #efefef;
 }
-#home{
+#home {
   background-color: #eee;
   width: 400px;
   height: 250px;

@@ -9,16 +9,13 @@ class Demo1 {
   }
 
   async start(mp3) {
+    console.log("开始执行");
     console.log(mp3);
-    const musicArrayBuffer = this.getMp3ArrayBuffer(mp3);
-    const decodedAudioData = this.decode(musicArrayBuffer);
-    this.play(decodedAudioData);
+    this.readAudioBuffer(mp3).then((decodedAudioData) => {
+      this.play(decodedAudioData);
+    });
   }
-  // 仅解释作用 大型项目用
-  /**
-   * @param {AudioBuffer} decodedAudioData
-   * @returns
-   */
+
   async play(decodedAudioData) {
     // 像竹子一样一个个节点连起来
     // 创建首节点
@@ -31,33 +28,23 @@ class Demo1 {
     sourceNode.start(0);
   }
 
-  /**
-   * @param {string} url
-   * @returns {ArrayBuffer}
-   */
   // 来读取音频文件 -> 音频文件都是被压缩过的，使用要重新解码
-  async getMp3ArrayBuffer(mp3) {
-    let reader = new FileReader();
-    let arrayBuffer = reader.readAsArrayBuffer(mp3);
-    console.log("读取完成");
-    reader.onload((e) => {
-      console.log(e.target.result);
-      console.log(arrayBuffer);
+  async readAudioBuffer(mp3) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      // 文件读取完后触发promise
+      reader.onload = async (e) => {
+        console.log("读取完成");
+        this.audioContext
+          .decodeAudioData(e.target.result)
+          .then(resolve, reject);
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(mp3);
     });
-
-    return arrayBuffer;
   }
 
-  /**
-   * @param {ArrayBuffer} arrayBuffer
-   * @returns {AudioBuffer}
-   */
-  // 解码
-  async decode(arrayBuffer) {
-    return this.audioContext.decodeAudioData(arrayBuffer);
-  }
 }
 
 export const player = new Demo1();
 
-// 问题一

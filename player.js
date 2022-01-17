@@ -37,7 +37,7 @@ class Player {
     this.onReady = new Dispatcher();
   }
 
-  // 读取音频模块
+  // 读取音频模块 -> ok!
   async readAudioBuffer(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -51,6 +51,7 @@ class Player {
       reader.readAsArrayBuffer(file);
     });
   }
+  
   // 添加音频列表
   async append(file) {
     const isEmpty = this.isEmpty;

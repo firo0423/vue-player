@@ -14,7 +14,7 @@
       var inpFile = document.querySelector("input[type=file]");
       inpFile.addEventListener("change", function () {
         var reader = new FileReader();
-        reader.readAsText(this.files[0]);
+        reader.readAsText(inpFile.files[0]);
         var count = 0;
         reader.onloadstart = function () {
           console.log("onloadstart状态" + this.readyState);

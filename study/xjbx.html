@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+  <script>
+    // async function readAudioBuffer(mp3) {
+    //   return new Promise((resolve, reject) => {
+    //     const reader = new FileReader();
+    //     // 文件读取完后触发promise
+    //     reader.onload = async (e) => {
+    //       console.log("读取完成");
+    //       this.audioContext
+    //         .decodeAudioData(e.target.result)
+    //         .then(resolve, reject); // 这么写是什么意思
+    //       // 这样写就相当于把catch和then写在一起，成功就执行前一个resolve函数，失败就执行reject
+    //     };
+    //     reader.onerror = reject;
+    //     reader.readAsArrayBuffer(mp3);
+    //   });
+    // }
+
+    // // 关于返回函数的思考
+    // function create1(pro) {
+    //   console.log("pro : " + pro);
+    //   return function (obj1, obj2) {
+    //     console.log(obj1 + " -- " + obj2);
+    //     return obj1 + obj2;
+    //   };
+    // }
+    // var c1 = create1("pro"); // 创建函数
+    // console.log(c1(1, 2));
+    // console.log("-------------------------");
+
+    // function create2(pro) {
+    //   return new Promise((resolve, reject) => {
+    //     if (pro === 1) {
+    //       resolve("成功");
+    //     } else if (pro === 2) {
+    //       reject("失败");
+    //     }
+    //   });
+    // }
+
+    // async function demo() {
+    //   return new Promise((resolve, reject) => {
+    //     let a = 1;
+    //     create2(a).then(resolve, reject);
+    //     let yes = resolve;
+    //     let no = reject
+    //     console.log(yes,no);
+    //   });
+    // }
+
+    // demo().then(result=>{console.log(result);})
+
+  </script>
+</html>
