@@ -28,6 +28,7 @@ class Demo1 {
     this.playList.push({
       index: this.localIndex,
       offset: 0,
+      start: null,
       source: null,
       buffer: await this.readAudioBuffer(mp3),
     });
@@ -58,21 +59,58 @@ class Demo1 {
     // 创建首节点
     const sourceNode = this.audioContext.createBufferSource();
     // 创建后需要往其buffer属性上挂载需要播放的数据
-    sourceNode.buffer = this.playList[this.currentIndex].buffer;
+    sourceNode.buffer = this.current.buffer;
     // 转到硬件播放 destination 表示 context 的最终节点，一般是音频渲染设备
     sourceNode.connect(this.audioContext.destination);
     console.log("开始播放");
-    sourceNode.start(0);
+    sourceNode.start(0, this.current.offset);
+    sourceNode.onended = () => {
+      console.log("播放完了");
+    };
     // 在播放列表里面存放开始节点方便操作
-    this.playList[this.currentIndex].source = sourceNode;
+    this.current.source = sourceNode;
+    // 开始的位置
+    this.current.start = this.audioContext.currentTime;
   }
 
   // 暂停 记录现在播放的时间
   async pause() {
-    this.playList[this.currentIndex].source.stop(0);
-    this.playList[this.currentIndex].source.disconnect();
-    this.playList[this.currentIndex].source = null;
+    this.current.source.stop(0);
+    this.current.source.disconnect();
+    this.current.source = null;
+    this.current.offset = this.position;
+    // 记录暂停位置
     console.log("成功暂停");
+  }
+
+
+  // 获取当前播放内容
+  get current() {
+    return this.playList[this.currentIndex]
+  }
+
+  get position() {
+    if (!this.playList.length) {
+      return 0;
+    }
+    return (
+      this.current.offset +
+      (this.current.start != null
+        // 拿到当前播放时间
+        ? this.audioContext.currentTime - this.current.start
+        : 0)
+    );
+  }
+
+  // 曲目位置可以设置
+  set position(rate) {
+    if (!this.playList.length) {
+      return;
+    }
+    let val = rate * this.duration;
+    this.pause();
+    this.current.offset = val;
+    this.play();
   }
 }
 
