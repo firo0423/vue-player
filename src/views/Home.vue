@@ -1,8 +1,9 @@
 <template>
   <div id="home">
     <div class="shell">
-      <input type="file" ref="file" />
+      <input type="file" ref="file" @change="addListen" />
       <button @click="play">播放</button>
+      <button @click="pause">暂停</button>
     </div>
   </div>
 </template>
@@ -22,7 +23,13 @@ export default {
       //   console.log("onload拿到的数据为" + this.result);
       //   console.log("状态" + this.readyState);
       // };
-      player.start(this.$refs.file.files[0]);
+      player.play();
+    },
+    pause() {
+      player.pause();
+    },
+    addListen() {
+      player.append(this.$refs.file.files[0]);
     },
   },
 };
