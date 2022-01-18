@@ -4,8 +4,8 @@
 class Demo1 {
   constructor() {
     // 1. 创建一个AudioContext实例，这是音频处理程序运行的环境
-    this.audio = new Audio();
     this.audioContext = new AudioContext({ latencyHint: "balanced" });
+    this.playlist = [];
   }
 
   async start(mp3) {
@@ -16,18 +16,16 @@ class Demo1 {
     });
   }
 
-  async play(decodedAudioData) {
-    // 像竹子一样一个个节点连起来
-    // 创建首节点
-    const sourceNode = this.audioContext.createBufferSource();
-    // 创建后需要往其buffer属性上挂载需要播放的数据
-    sourceNode.buffer = decodedAudioData;
-    // 转到硬件播放 destination 表示 context 的最终节点，一般是音频渲染设备
-    sourceNode.connect(this.audioContext.destination);
-    console.log("开始播放");
-    sourceNode.start(0);
+  // 添加音频列表
+  async append(mp3) {
+    const isEmpty = this.isEmpty;
+    this.playList.push({
+      offset: 0,
+      start: null,
+      buffer: await this.readAudioBuffer(mp3),
+    });
   }
-
+  
   // 来读取音频文件 -> 音频文件都是被压缩过的，使用要重新解码
   async readAudioBuffer(mp3) {
     return new Promise((resolve, reject) => {
@@ -44,7 +42,17 @@ class Demo1 {
     });
   }
 
+  async play(decodedAudioData) {
+    // 像竹子一样一个个节点连起来
+    // 创建首节点
+    const sourceNode = this.audioContext.createBufferSource();
+    // 创建后需要往其buffer属性上挂载需要播放的数据
+    sourceNode.buffer = decodedAudioData;
+    // 转到硬件播放 destination 表示 context 的最终节点，一般是音频渲染设备
+    sourceNode.connect(this.audioContext.destination);
+    console.log("开始播放");
+    sourceNode.start(0);
+  }
 }
 
 export const player = new Demo1();
-
