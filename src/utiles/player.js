@@ -51,7 +51,8 @@ class Demo1 {
   }
 
   // 播放
-  async play() {
+  play() {
+    // 多次点击播放重复设立buffer，要规避
     if (!this.playList.length) {
       return;
     }
@@ -63,6 +64,11 @@ class Demo1 {
     // 转到硬件播放 destination 表示 context 的最终节点，一般是音频渲染设备
     sourceNode.connect(this.audioContext.destination);
     console.log("开始播放");
+
+    // AudioBufferSourceNode.start([when][, offset][, duration]);
+    // 后面那个量是偏移量，比如说，我现在播放到10s停了，
+    // 再去点播放这个时候偏移量设置为10，就是向后拖10s和，很简单
+    console.log(this.current.offset);
     sourceNode.start(0, this.current.offset);
     sourceNode.onended = () => {
       console.log("播放完了");
@@ -74,7 +80,10 @@ class Demo1 {
   }
 
   // 暂停 记录现在播放的时间
-  async pause() {
+  pause() {
+    if (!this.playList.length || !this.current.source) {
+      return;
+    }
     this.current.source.stop(0);
     this.current.source.disconnect();
     this.current.source = null;
@@ -83,10 +92,36 @@ class Demo1 {
     console.log("成功暂停");
   }
 
+  //停止
+  stop() {
+    this.pause();
+    this.current.offset = 0;
+  }
+
+  // 切换歌曲 上一首
+  prev() {
+    console.log('上一首');
+    this.stop();
+    --this.currentIndex;
+    if (this.currentIndex < 0) {
+      this.currentIndex = this.playList.length - 1;
+    }
+    this.play();
+  }
+
+  next() {
+    this.stop();
+    console.log('下一首');
+    ++this.currentIndex;
+    if (this.currentIndex >= this.playList.length) {
+      this.currentIndex = 0;
+    }
+    this.play();
+  }
 
   // 获取当前播放内容
   get current() {
-    return this.playList[this.currentIndex]
+    return this.playList[this.currentIndex];
   }
 
   get position() {
@@ -96,21 +131,10 @@ class Demo1 {
     return (
       this.current.offset +
       (this.current.start != null
-        // 拿到当前播放时间
-        ? this.audioContext.currentTime - this.current.start
+        ? // 拿到当前播放时间
+          this.audioContext.currentTime - this.current.start
         : 0)
     );
-  }
-
-  // 曲目位置可以设置
-  set position(rate) {
-    if (!this.playList.length) {
-      return;
-    }
-    let val = rate * this.duration;
-    this.pause();
-    this.current.offset = val;
-    this.play();
   }
 }
 

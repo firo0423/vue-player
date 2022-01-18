@@ -4,6 +4,9 @@
       <input type="file" ref="file" @change="addListen" />
       <button @click="play">播放</button>
       <button @click="pause">暂停</button>
+      <button @click="stop">结束</button>
+      <button @click="prev">上一首</button>
+      <button @click="next">下一首</button>
     </div>
   </div>
 </template>
@@ -28,6 +31,16 @@ export default {
     pause() {
       player.pause();
     },
+    stop(){
+      player.stop();
+    },
+    prev(){
+      player.prev();
+    },
+    next(){
+      player.next();
+    },
+    
     addListen() {
       player.append(this.$refs.file.files[0]);
     },
