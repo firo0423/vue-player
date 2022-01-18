@@ -8,6 +8,16 @@ class Demo1 {
     this.playList = [];
     this.currentIndex = 0;
     this.localIndex = 0;
+
+    // 防报错
+    this.emptyNode = {
+      name: null,
+      index: 0,
+      offset: 0,
+      start: null,
+      source: null,
+      buffer: null,
+    };
   }
 
   // async start(mp3) {
@@ -26,12 +36,14 @@ class Demo1 {
     ++this.localIndex;
     console.log("添加完成：" + this.localIndex);
     this.playList.push({
+      name:mp3.name,
       index: this.localIndex,
       offset: 0,
       start: null,
       source: null,
       buffer: await this.readAudioBuffer(mp3),
     });
+  
   }
 
   // 来读取音频文件 -> 音频文件都是被压缩过的，使用要重新解码
@@ -121,7 +133,13 @@ class Demo1 {
 
   // 获取当前播放内容
   get current() {
-    return this.playList[this.currentIndex];
+    // 后面显示时间的话还没加音频是拿不到playlist的 所以在这里加一个emptyNode 防报错
+    return this.playList[this.currentIndex] || this.emptyNode;
+  }
+
+  // 时长
+  get duration() {
+    return this.current.buffer ? this.current.buffer.duration : 0.001;
   }
 
   get position() {
