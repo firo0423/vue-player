@@ -19,15 +19,6 @@ class Demo1 {
       buffer: null,
     };
   }
-
-  // async start(mp3) {
-  //   console.log("开始执行");
-  //   console.log(mp3);
-  //   this.readAudioBuffer(mp3).then((decodedAudioData) => {
-  //     this.play(decodedAudioData);
-  //   });
-  // }
-
   // 添加音频列表
   async append(mp3) {
     if (!this.playList.length) {
@@ -81,7 +72,7 @@ class Demo1 {
     console.log(this.current.offset);
     sourceNode.start(0, this.current.offset);
     sourceNode.onended = () => {
-      this.autoPlay ? this.next() : (this.current.start = null);
+      this.autoPlay ? this.next() : this.stop();
     };
     // 在播放列表里面存放开始节点方便操作
     this.current.source = sourceNode;
@@ -100,7 +91,6 @@ class Demo1 {
     this.current.source.onended = null;
     this.current.source = null;
     this.current.offset = this.position;
-    
     // 免得position一直跑
     this.current.start = null;
     // 记录暂停位置
@@ -109,6 +99,7 @@ class Demo1 {
   //停止
   stop() {
     this.pause();
+    this.current.start = null;
     this.current.offset = 0;
   }
 
@@ -153,6 +144,15 @@ class Demo1 {
           this.audioContext.currentTime - this.current.start
         : 0)
     );
+  }
+
+  set position(val) {
+    if (!this.playList.length) {
+      return;
+    }
+    this.pause();
+    this.current.offset = val;
+    this.play();
   }
 }
 

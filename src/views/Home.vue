@@ -3,14 +3,24 @@
     <div class="shell">
       <input type="file" ref="file" @change="addListen" /> <br />
       <div class="onplayName">{{ songName }}</div>
-      <div class="onplayTime">{{ totalTime(duration) }}</div>
-      <div class="onplayTime">{{ totalTime(position) }}</div>
+      <div class="onplayTime">
+        {{ totalTime(position) }}/{{ totalTime(duration) }}
+      </div>
+      <!-- 进度条 -->
+      <input
+        type="range"
+        name="spacing"
+        v-model="progressBar"
+        @mousedown="change = true"
+        @mouseup="saveChange"
+      /><br />
+
       <button @click="play">播放</button>
       <button @click="pause">暂停</button>
       <button @click="stop">结束</button>
       <button @click="prev">上一首</button>
       <button @click="next">下一首</button>
-      <button @click="changeMode">自动播放:{{autoPlay}}</button>
+      <button @click="changeMode">自动播放:{{ autoPlay }}</button>
     </div>
     <div class="list">
       <ul>
@@ -28,11 +38,13 @@ export default {
   name: "Home",
   data() {
     return {
+      progressBar: 0, // 控制进度条
       onplayName: "",
       duration: 0, //时长
       position: 0, //当前所处位置
       playList: [],
-      autoPlay: player.autoPlay
+      autoPlay: player.autoPlay, // 自动播放
+      change: false,
     };
   },
   mounted() {
@@ -41,17 +53,30 @@ export default {
       window.requestAnimationFrame(draw);
       const progress = player.position / player.duration;
       this.progress = `${(progress * 100).toFixed(2)}%`;
-      this.onplayName = player.current.name;
-      this.position = player.position;
-      this.duration = player.duration;
-    };
+      this.onplayName = player.current.name; // 歌曲名字
+      
+      this.duration = player.duration; // 歌曲时长
 
+      if (this.change) {
+        this.position = this.duration*this.progressBar/100; // 歌曲播放位置
+      } else {
+        this.position = player.position; // 歌曲播放位置
+        this.progressBar = ((player.position / player.duration) * 100).toFixed(2); // 设置进度条
+      }
+      
+    };
     draw();
   },
   methods: {
-    changeMode(){
-      player.autoPlay = !player.autoPlay
-      this.autoPlay = player.autoPlay
+    // 松开鼠标通过进度条的值改变player中position的值
+    saveChange(){
+      player.position = this.position 
+      if(this.progressBar == 100) this.stop()
+      this.change = false
+    },
+    changeMode() {
+      player.autoPlay = !player.autoPlay;
+      this.autoPlay = player.autoPlay;
     },
     play() {
       player.play();
@@ -75,6 +100,7 @@ export default {
     async addListen() {
       // 用户传了又不穿会把this.$refs.file.files里面的东西顶掉
       if (this.$refs.file.files.length === 0) return;
+      player.stop();
       await player.append(this.$refs.file.files[0]);
       this.onplayName = player.current.name;
       this.duration = player.duration;
