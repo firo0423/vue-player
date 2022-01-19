@@ -35,13 +35,30 @@ export default {
       progressBar: 0, // 控制进度条
       progressBar_length: "",
       voiceBar_length: "",
+      screenWidth: document.body.clientWidth,
     };
   },
   mounted() {
     this.progressBar_length = this.$refs.progress.clientWidth;
     this.voiceBar_length = this.$refs.voice.clientWidth;
+    // 用来检测页面尺寸变化
+    window.onresize = () => {
+      return (() => {
+        window.screenWidth = document.body.clientWidth;
+        this.screenWidth = window.screenWidth;
+      })();
+    };
   },
   methods: {},
+  watch: {
+    screenWidth: {
+      deep: true,
+      handler() {
+        this.progressBar_length = this.$refs.progress.clientWidth;
+        this.voiceBar_length = this.$refs.voice.clientWidth;
+      },
+    },
+  },
   computed: {
     active_progressBar_length: function (data) {
       return `${data.progressBar_length * (this.progressBar / 100)}px`;
@@ -71,8 +88,8 @@ export default {
     outline: none;
     border-radius: 10px;
     z-index: 999;
-    transition: all .1s;
-    &:hover{
+    transition: all 0.1s;
+    &:hover {
       box-shadow: 0 0 1px 1px #7267f044;
     }
     &::-webkit-slider-thumb {
@@ -103,9 +120,9 @@ export default {
     background-color: #7267f081;
     width: var(--progressBar_length);
     height: 5px;
-    left: 2px;
+    left: 4.5px;
     z-index: 1;
-    border-right: 10px;
+    border-radius: 10px;
   }
 
   .voice {
