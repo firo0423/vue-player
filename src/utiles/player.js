@@ -7,7 +7,7 @@ class Demo1 {
     this.audioContext = new AudioContext({ latencyHint: "balanced" });
     this.playList = [];
     this.currentIndex = 0;
-    this.localIndex = 0;
+    this.autoPlay = false;
 
     // 防报错
     this.emptyNode = {
@@ -31,19 +31,18 @@ class Demo1 {
   // 添加音频列表
   async append(mp3) {
     if (!this.playList.length) {
-      this.localIndex = 0;
-    }
-    ++this.localIndex;
-    console.log("添加完成：" + this.localIndex);
+      this.currentIndex = 0;
+    } else ++this.currentIndex;
+
+    console.log("添加完成：" + this.currentIndex);
     this.playList.push({
-      name:mp3.name,
-      index: this.localIndex,
+      name: mp3.name,
+      index: this.currentIndex,
       offset: 0,
       start: null,
       source: null,
       buffer: await this.readAudioBuffer(mp3),
     });
-  
   }
 
   // 来读取音频文件 -> 音频文件都是被压缩过的，使用要重新解码
@@ -75,7 +74,6 @@ class Demo1 {
     sourceNode.buffer = this.current.buffer;
     // 转到硬件播放 destination 表示 context 的最终节点，一般是音频渲染设备
     sourceNode.connect(this.audioContext.destination);
-    console.log("开始播放");
 
     // AudioBufferSourceNode.start([when][, offset][, duration]);
     // 后面那个量是偏移量，比如说，我现在播放到10s停了，
@@ -83,7 +81,7 @@ class Demo1 {
     console.log(this.current.offset);
     sourceNode.start(0, this.current.offset);
     sourceNode.onended = () => {
-      console.log("播放完了");
+      this.autoPlay ? this.next() : (this.current.start = null);
     };
     // 在播放列表里面存放开始节点方便操作
     this.current.source = sourceNode;
@@ -98,10 +96,14 @@ class Demo1 {
     }
     this.current.source.stop(0);
     this.current.source.disconnect();
+    // 防止自动播放的时候一直播，按暂停都不带停
+    this.current.source.onended = null;
     this.current.source = null;
     this.current.offset = this.position;
+    
+    // 免得position一直跑
+    this.current.start = null;
     // 记录暂停位置
-    console.log("成功暂停");
   }
 
   //停止
@@ -112,7 +114,6 @@ class Demo1 {
 
   // 切换歌曲 上一首
   prev() {
-    console.log('上一首');
     this.stop();
     --this.currentIndex;
     if (this.currentIndex < 0) {
@@ -123,7 +124,6 @@ class Demo1 {
 
   next() {
     this.stop();
-    console.log('下一首');
     ++this.currentIndex;
     if (this.currentIndex >= this.playList.length) {
       this.currentIndex = 0;
