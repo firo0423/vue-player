@@ -5,6 +5,8 @@ class Demo1 {
   constructor() {
     // 1. 创建一个AudioContext实例，这是音频处理程序运行的环境
     this.audioContext = new AudioContext({ latencyHint: "balanced" });
+    // 方便调节音量
+    this.gainNode = this.audioContext.createGain();
     this.playList = [];
     this.currentIndex = 0;
     this.autoPlay = false;
@@ -61,10 +63,12 @@ class Demo1 {
     // 像竹子一样一个个节点连起来
     // 创建首节点
     const sourceNode = this.audioContext.createBufferSource();
+
     // 创建后需要往其buffer属性上挂载需要播放的数据
     sourceNode.buffer = this.current.buffer;
     // 转到硬件播放 destination 表示 context 的最终节点，一般是音频渲染设备
-    sourceNode.connect(this.audioContext.destination);
+    sourceNode.connect(this.gainNode);
+    this.gainNode.connect(this.audioContext.destination);
 
     // AudioBufferSourceNode.start([when][, offset][, duration]);
     // 后面那个量是偏移量，比如说，我现在播放到10s停了，
@@ -78,6 +82,15 @@ class Demo1 {
     this.current.source = sourceNode;
     // 开始的位置
     this.current.start = this.audioContext.currentTime;
+  }
+
+  // 调节音量
+  voiceControl(val) {
+    if (!this.playList.length) {
+      return;
+    }
+    this.gainNode.gain.setValueAtTime(val, this.audioContext.currentTime);
+
   }
 
   // 暂停 记录现在播放的时间
