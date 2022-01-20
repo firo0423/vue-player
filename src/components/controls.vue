@@ -15,28 +15,31 @@
     </div>
     <i class="iconfont icon-danlieliebiao" @click="showList"></i>
 
-    <!-- 播放列表 -->
-    <div class="playlist" v-show="showlist">
-      <el-card shadow="always" :body-style="{ padding: '20px' }">
-        <input type="file" ref="file" @change="addListen" />
-        <i class="iconfont icon-jiahao"></i>
-        <template v-if="playList.length == 0">
-          <span class="tip">还没有添加歌曲呢</span>
-        </template>
-        <template v-if="!playList.length == 0">
-          <ul>
-            <li
-              v-for="song in playList"
-              :key="song.index"
-              :class="{ active: song.index == currentIndex }"
-              @click="changeSong(song.index)"
-            >
-              {{ song.name }}
-            </li>
-          </ul>
-        </template>
-      </el-card>
-    </div>
+    <transition name="el-fade-in">
+      <!-- 播放列表 -->
+      <div class="playlist" v-show="showlist">
+        <el-card shadow="always" :body-style="{ padding: '20px' }">
+          <input type="file" ref="file" @change="addListen" />
+          <i class="iconfont icon-jiahao"></i>
+          <template v-if="playList.length == 0">
+            <span class="tip">还没有添加歌曲呢</span>
+          </template>
+          <template v-if="!playList.length == 0">
+            <ul>
+              <li
+                v-for="song in playList"
+                :key="song.index"
+                :class="{ active: song.index == currentIndex }"
+                @click="changeSong(song.index)"
+              >
+                {{ song.name }}
+              </li>
+            </ul>
+          </template>
+        </el-card>
+      </div>
+      <!-- 播放列表 -->
+    </transition>
   </div>
 </template>
 
@@ -99,7 +102,7 @@ export default {
       this.$store.commit("changeSong", index);
     },
     showList() {
-      this.showlist = !this.showlist
+      this.showlist = !this.showlist;
     },
   },
 };
@@ -111,6 +114,8 @@ export default {
   height: 40px;
   display: flex;
   justify-content: center;
+
+  // 下方时间样式
   .position {
     font-size: 18px;
     color: rgba(63, 63, 63, 0.534);
@@ -120,6 +125,7 @@ export default {
     margin: 0 15px;
     user-select: none;
   }
+  // 下方icon样式
   i {
     color: rgba(63, 63, 63, 0.534);
     font-size: 24px;
@@ -136,6 +142,8 @@ export default {
       float: right;
     }
   }
+
+  // 右侧播放列表样式
   .playlist {
     position: absolute;
     right: -330px;
