@@ -9,8 +9,9 @@ https://github.com/pengnima/music-vue 这位大佬写的太强了，注释写的
 
 ## 效果展示
 <img width="661" alt="4587c6660367b336a0658f5bf229b46" src="https://user-images.githubusercontent.com/93251384/150303493-9a1f4281-2765-4e1e-ad90-15c96c976a9f.png">
+
 ## 项目结构
-```
+``` 
 vue-player
 ├── public
 │   ├── music
@@ -42,7 +43,11 @@ vue-player
 ├── raft-player.js
 ├── README.md
 └── test.html
+
 ```
+
+
+
 
 ## 使用
 ```
