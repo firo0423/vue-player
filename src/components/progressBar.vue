@@ -17,7 +17,6 @@
       class="voice"
       type="range"
       v-model="getVoiceBar"
-      @change="setVoice(getVoiceBar)"
       :style="{
         '--voiceBar_length': active_voiceBar_length,
       }"
@@ -86,10 +85,7 @@ export default {
     },
   },
   methods: {
-    setVoice(val) {
-      console.log(val);
-      player.voiceControl(val / 100);
-    },
+
     // 松开鼠标通过进度条的值改变player中position的值
     saveChange() {
       this.$store.commit("saveProgress");

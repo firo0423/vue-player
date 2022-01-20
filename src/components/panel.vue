@@ -9,7 +9,6 @@
 </template>
 
 <script>
-import { player } from "../utiles/player";
 import { mapState } from "vuex";
 export default {
   computed: {
@@ -29,19 +28,13 @@ export default {
       else return "未选择文件";
     },
   },
-  methods: {
-    async addListen() {
-      // 用户传了又不穿会把this.$refs.file.files里面的东西顶掉
-      if (this.$refs.file.files.length === 0) return;
-      player.stop();
-      await player.append(this.$refs.file.files[0]);
-    },
-  },
+  methods: {},
 };
 </script>
 
 <style lang="scss">
 #panel {
+  position: relative;
   height: 80px;
   display: flex;
   flex-direction: row;
@@ -53,11 +46,14 @@ export default {
     justify-content: center;
     align-items: center;
   }
-  .position{
+  .songName {
+    font-size: 20px;
+  }
+  .position {
     color: #7367f0;
     font-size: 26px;
   }
-  .duration{
+  .duration {
     font-size: 14px;
   }
 }

@@ -8,6 +8,7 @@ export default createStore({
     duration: 0, //时长
     position: 0, //当前所处位置
     playList: [],
+    currentIndex:0,
     autoPlay: player.autoPlay, // 自动播放
     change: false,
   },
@@ -20,7 +21,7 @@ export default createStore({
         // state.progress = `${(progress * 100).toFixed(2)}%`;
         state.onplayName = player.current.name; // 歌曲名字
         state.duration = player.duration; // 歌曲时长
-
+        state.currentIndex = player.currentIndex // 播放歌曲序号
         if (state.change) {
           state.position = (state.duration * state.progressBar) / 100; // 歌曲播放位置
         } else {
@@ -33,17 +34,29 @@ export default createStore({
       };
       draw();
     },
+    async addPlaylist(state, target) {
+      await player.append(target);
+      state.playList.push({
+        name: player.current.name,
+        index: player.current.index,
+      });
+      console.log(state.playList);
+    },
     changeVoiceBar(state, val) {
+      player.voiceControl(val / 100);
       state.voiceBar = val;
     },
     changeProgressBar(state, val) {
       state.change = true;
       state.progressBar = val;
     },
-    saveProgress (state){
-      player.position = state.position 
-      if(state.progressBar == 100) this.stop()
-      state.change = false
+    saveProgress(state) {
+      player.position = state.position;
+      if (state.progressBar == 100) player.stop();
+      state.change = false;
+    },
+    changeSong(state,index){
+      player.currentIndex = index
     }
   },
   actions: {},
