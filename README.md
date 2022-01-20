@@ -43,6 +43,7 @@ vue-player
 ├── README.md
 └── test.html
 ```
+
 ## 使用
 ```
 npm install
