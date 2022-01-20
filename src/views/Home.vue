@@ -2,7 +2,7 @@
   <div id="home">
     <!-- 栏栅布局 -->
     <el-row class="row-bg" justify="center">
-      <el-col :span="8">
+      <el-col :span="6">
         <el-card class="shell">
           <!-- 三个组件 -->
           <panel/>

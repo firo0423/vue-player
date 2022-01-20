@@ -10,7 +10,7 @@ class Demo1 {
     this.playList = [];
     this.currentIndex = 0;
     this.autoPlay = false;
-
+    this.Volume = 0.8;
     // 防报错
     this.emptyNode = {
       name: null,
@@ -68,6 +68,11 @@ class Demo1 {
     sourceNode.buffer = this.current.buffer;
     // 转到硬件播放 destination 表示 context 的最终节点，一般是音频渲染设备
     sourceNode.connect(this.gainNode);
+    // 预设音量
+    this.gainNode.gain.setValueAtTime(
+      this.Volume,
+      this.audioContext.currentTime
+    );
     this.gainNode.connect(this.audioContext.destination);
 
     // AudioBufferSourceNode.start([when][, offset][, duration]);
@@ -89,8 +94,8 @@ class Demo1 {
     if (!this.playList.length) {
       return;
     }
+    this.Volume = val;
     this.gainNode.gain.setValueAtTime(val, this.audioContext.currentTime);
-
   }
 
   // 暂停 记录现在播放的时间
