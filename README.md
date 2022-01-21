@@ -8,6 +8,7 @@ https://github.com/lizzz0523/limni/tree/master/music-player<br>
 https://github.com/pengnima/music-vue 这位大佬写的太强了，注释写的很清楚，js的后台处理学这位大佬<br>
 
 ## 效果展示
+DEMO：https://firo0423.github.io/vue-player/
 <img width="661" alt="4587c6660367b336a0658f5bf229b46" src="https://user-images.githubusercontent.com/93251384/150303493-9a1f4281-2765-4e1e-ad90-15c96c976a9f.png">
 
 ## 项目结构
